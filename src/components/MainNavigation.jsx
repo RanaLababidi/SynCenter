@@ -104,7 +104,7 @@ export default function MainNavigation() {
   };
 
   return (
-    <div className="bg-background flex min-h-screen">
+    <div className="bg-background flex h-full min-h-screen">
 
       <CssBaseline />
 

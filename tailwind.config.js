@@ -11,12 +11,15 @@ export default {
         lightgray:"#2c3f66",
         shade:"#9b9695",
         redcolor:"#ff0000",
-
-
+        blueTasksBg:"#809bce",
+        redTaskBg:"#f7adb4",
+        yellowTaskBg:"#f7f7b4",
+        greenTaskBg:"#baffc9"
       },
       fontFamily: {
         title: ["title", "sans-serif"],
         content: ["content", "sans"],
+        number:["number","sans-serif"]
 
 
       },

@@ -23,10 +23,12 @@ import EmployeeProfile from "./Pages/EmployeeProfile.jsx";
 import Clients from "./Pages/Clients.jsx";
 import Employees from "./Pages/Employees.jsx";
 import Statistics from "./Pages/Statistics.jsx";
+import TasksDetails from "./Pages/TasksDetails.jsx";
 import MainNavigation from "./components/MainNavigation.jsx";
 import ProjectNav from "./components/ProjectNav.jsx";
 import ProjectDetailsInfo from "./Pages/ProjectDetails.jsx";
-import { tokenLoader, checkAuthLoader } from "./util/auth.js";
+import {checkAuthLoader } from "./util/auth.js";
+
 import Files from "./Pages/Files.jsx";
 import Tasks from "./Pages/Tasks.jsx";
 import {
@@ -35,6 +37,8 @@ import {
   clientsIndex,
   employeesIndex,
   employeeDetailsLoader,
+  TasksLoade,
+  
 } from "./http.js";
 /*
 function to declare the routers:createBrowserRouter
@@ -106,7 +110,10 @@ const router = createBrowserRouter([
             loader: projectDetailsLoader,
             children: [
               { path: "info", element: <ProjectDetailsInfo /> },
-              { path: "tasks", element: <Tasks /> },
+              { path: "tasks",id:"tasks",loader:TasksLoade, children:[
+               {path:"", element: <Tasks />},
+               {path:":tasktId" , element:<TasksDetails/>}
+              ]},
               { path: "files", element: <Files /> },
             ],
           },
@@ -118,7 +125,6 @@ const router = createBrowserRouter([
         loader: employeesIndex,
         children: [
           { path: "", element: <Employees /> },
-
           {
             path: ":employeeId",
             element: <EmployeeProfile />,
@@ -133,7 +139,6 @@ const router = createBrowserRouter([
         id: "clients",
         loader: clientsIndex,
       },
-      
       {
         path: "logout",
         element: <Logout />,

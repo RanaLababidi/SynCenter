@@ -72,7 +72,6 @@ function Employees() {
     formData.append("name", name);
     formData.append("email", email);
     formData.append("phone", phone);
-
     formData.append("password", password);
     formData.append("password_confirmation", password_confirmation);
     if (file != null) {
@@ -108,8 +107,8 @@ function Employees() {
             />
             <h5 className="text-xl font-bold">{employee.name}</h5>
             <div className="flex items-center">
-              <p>Backend developer/</p>
-              <div className="text-shade ">senior</div>
+              <p>{employee.title}</p>
+              <div className="text-shade ">{employee.level}</div>
             </div>
             <button
               className="underline text-pistach font-bold hover:text-white"
@@ -128,7 +127,7 @@ function Employees() {
           onClose={handleCloseModal}
         />
       )}
-      {showModal && ( 
+      {showModal && (
         <Model
           title="New employee"
           onClose={handleClose}

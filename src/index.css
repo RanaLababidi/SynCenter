@@ -10,3 +10,7 @@
     font-family: "content";
     src: url("../public/fonts/Comfortaa-Medium.ttf");
   }
+  @font-face {
+    font-family: "number";
+    src: url("../public/fonts/Orbitron-Regular.ttf");
+  }
