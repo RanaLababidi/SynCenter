@@ -27,7 +27,7 @@ import TasksDetails from "./Pages/TasksDetails.jsx";
 import MainNavigation from "./components/MainNavigation.jsx";
 import ProjectNav from "./components/ProjectNav.jsx";
 import ProjectDetailsInfo from "./Pages/ProjectDetails.jsx";
-import {checkAuthLoader } from "./util/auth.js";
+import { checkAuthLoader } from "./util/auth.js";
 
 import Files from "./Pages/Files.jsx";
 import Tasks from "./Pages/Tasks.jsx";
@@ -38,7 +38,7 @@ import {
   employeesIndex,
   employeeDetailsLoader,
   TasksLoade,
-  
+  fileLoade
 } from "./http.js";
 /*
 function to declare the routers:createBrowserRouter
@@ -110,11 +110,16 @@ const router = createBrowserRouter([
             loader: projectDetailsLoader,
             children: [
               { path: "info", element: <ProjectDetailsInfo /> },
-              { path: "tasks",id:"tasks",loader:TasksLoade, children:[
-               {path:"", element: <Tasks />},
-               {path:":tasktId" , element:<TasksDetails/>}
-              ]},
-              { path: "files", element: <Files /> },
+              {
+                path: "tasks",
+                id: "tasks",
+                loader: TasksLoade,
+                children: [
+                  { path: "", element: <Tasks /> },
+                  { path: ":tasktId", element: <TasksDetails /> },
+                ],
+              },
+              { path: "files", element: <Files /> , id:"files", loader:fileLoade},
             ],
           },
         ],

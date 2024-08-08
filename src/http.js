@@ -1,4 +1,4 @@
-const baseUrl = "http://192.168.1.5:8000";
+const baseUrl = "http://192.168.1.2:8000";
 const token = localStorage.getItem("token");
 const headers = {
   "Content-Type": "application/json",
@@ -94,7 +94,7 @@ export async function clientsIndex() {
   }
 
   const responseData = await response.json();
-  return responseData.clients; 
+  return responseData.clients;
 }
 export async function storeClient(formData) {
   const token = localStorage.getItem("token");
@@ -135,7 +135,7 @@ export async function updateClient(formData, id) {
     },
     body: formData,
   });
-  if(response.status ===422){
+  if (response.status === 422) {
     return response;
   }
   if (!response.ok) {
@@ -171,7 +171,7 @@ export async function employeeDetailsLoader({ params }) {
   }
 
   const responseData = await response.json();
-  return responseData.employees ; 
+  return responseData.employees;
 }
 export async function storeEmpolyee(formData) {
   const token = localStorage.getItem("token");
@@ -223,47 +223,41 @@ export async function deleteEmployee(id) {
   return responseData;
 }
 
-export async function employeeLoade ()  {
-  
-    const token = localStorage.getItem("token");
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    };
-
-    const response = await fetch(`${baseUrl}/company/employees`, { headers });
-
-    if (!response.ok) {
-      throw new Error("Could not fetch clients.");
-    }
-
-    const responseData = await response.json();
-    return responseData.employees;
+export async function employeeLoade() {
+  const token = localStorage.getItem("token");
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
   };
 
+  const response = await fetch(`${baseUrl}/company/employees`, { headers });
 
+  if (!response.ok) {
+    throw new Error("Could not fetch clients.");
+  }
+  const responseData = await response.json();
+  return responseData.employees;
+}
 //Tasks
 export async function storeTask(formData) {
   const token = localStorage.getItem("token");
   const headers = {
-      Authorization: `Bearer ${token}`,
-      // Content-Type should be omitted for FormData
+    Authorization: `Bearer ${token}`,
   };
-
   const response = await fetch(`${baseUrl}/company/tasks`, {
-      method: "POST",
-      headers: headers,
-      body: formData,
+    method: "POST",
+    headers: headers,
+    body: formData,
   });
 
   if (!response.ok) {
-      throw new Error("Could not fetch projects.");
+    throw new Error("Could not fetch projects.");
   }
-  
+
   const responseData = await response.json();
   return responseData;
 }
-export async function TasksLoade ({ params })  {
+export async function TasksLoade({ params }) {
   const projectId = params.projectId;
   const token = localStorage.getItem("token");
   const headers = {
@@ -271,7 +265,10 @@ export async function TasksLoade ({ params })  {
     Authorization: `Bearer ${token}`,
   };
 
-  const response = await fetch(`${baseUrl}/company/tasks/?project_id=${projectId}`, { headers });
+  const response = await fetch(
+    `${baseUrl}/company/tasks/?project_id=${projectId}`,
+    { headers }
+  );
 
   if (!response.ok) {
     throw new Error("Could not fetch clients.");
@@ -279,4 +276,78 @@ export async function TasksLoade ({ params })  {
 
   const responseData = await response.json();
   return responseData.tasks;
-};
+}
+export async function changeStatus(formData, id) {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${baseUrl}/company/tasks/change-status/${id}`, {
+    method: "POST", // Changed method to POST
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+  if (response.status === 422) {
+    return response;
+  }
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.log("Server error response:", errorData);
+    throw new Error(`Could not update project: ${errorData.message}`);
+  }
+  const responseData = await response.json();
+  return responseData;
+}
+//files
+export async function storeFile(formData, id) {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${baseUrl}/company/files/project/${id}`, {
+    method: "POST", // Changed method to POST
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+  if (response.status === 422) {
+    return response;
+  }
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.log("Server error response:", errorData);
+    throw new Error(`Could not update project: ${errorData.message}`);
+  }
+  const responseData = await response.json();
+  return responseData;
+}
+export async function fileLoade({ params }) {
+  const projectId = params.projectId;
+  const token = localStorage.getItem("token");
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+
+  const response = await fetch(
+    `${baseUrl}/company/files/project/${projectId}`,
+    { headers }
+  );
+
+  if (!response.ok) {
+    throw new Error("Could not fetch clients.");
+  }
+
+  const responseData = await response.json();
+  return responseData.files;
+}
+export async function deleteFiles(id) {
+  const response = await fetch(`${baseUrl}/company/files/${id}`, {
+    method: "DELETE",
+    headers: headers,
+  });
+
+  if (!response.ok) {
+    throw new Error("Could not delete project.");
+  }
+
+  const responseData = await response.json();
+  return responseData;
+}

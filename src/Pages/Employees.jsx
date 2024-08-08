@@ -2,13 +2,12 @@ import React, { useState, useCallback } from "react";
 import { Link, useRouteLoaderData } from "react-router-dom";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
-
 import Title from "../components/Title";
 import ButtonComponent from "../components/ButtonComponent";
 import EmployeeProfile from "./EmployeeProfile";
 import Model from "../Pages/Model";
 import FormModelRequired from "../components/FormModelRequired";
-import FormModel from "../components/FormModel";
+import MenuLevels from "../components/MenuLevels"
 import { storeEmpolyee } from "../http";
 
 function Employees() {
@@ -18,6 +17,8 @@ function Employees() {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [file, setFile] = useState();
   const [name, setName] = useState();
+  const [title, setTitle] = useState();
+  const [level, setLevel] = useState(null);
   const [password_confirmation, setPassword_confirmation] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -72,6 +73,9 @@ function Employees() {
     formData.append("name", name);
     formData.append("email", email);
     formData.append("phone", phone);
+    formData.append("title", title);
+    formData.append("level", level);
+
     formData.append("password", password);
     formData.append("password_confirmation", password_confirmation);
     if (file != null) {
@@ -107,8 +111,8 @@ function Employees() {
             />
             <h5 className="text-xl font-bold">{employee.name}</h5>
             <div className="flex items-center">
-              <p>{employee.title}</p>
-              <div className="text-shade ">{employee.level}</div>
+              <p>{employee.title} /</p>
+              <div className="text-shade ">{employee.level} </div>
             </div>
             <button
               className="underline text-pistach font-bold hover:text-white"
@@ -162,6 +166,14 @@ function Employees() {
             onChange={(e) => setPhone(e.target.value)}
             onBlur={() => handelInputBlur("phone")}
           />
+          <FormModelRequired
+            label="Jop title:"
+            id="title"
+            type="text"
+            placeholder="Enter employee jop title "
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <MenuLevels onClientSelect={setLevel} />
           <FormModelRequired
             label="Password:"
             id="password"

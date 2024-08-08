@@ -5,7 +5,7 @@ import CardButton from "../components/CardButton";
 import DeleteOutlineSharpIcon from "@mui/icons-material/DeleteOutlineSharp";
 import ModeEditOutlineSharpIcon from "@mui/icons-material/ModeEditOutlineSharp";
 import CloseSharpIcon from "@mui/icons-material/CloseSharp";
-
+import MenuLevels from "../components/MenuLevels";
 import Model from "../Pages/Model";
 import FormModel from "../components/FormModel";
 import FormModelRequired from "../components/FormModelRequired";
@@ -23,7 +23,8 @@ const EmployeeProfile = ({ employee, onClose }) => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState(employee.email);
   const [phone, setPhone] = useState(employee.phone);
-
+  const [title, setTitle] = useState(employee.title);
+  const [level, setLevel] = useState(employee.level_translation);
   const [didEdit, setDidEdit] = useState({
     email: false,
     password: false,
@@ -53,6 +54,7 @@ const EmployeeProfile = ({ employee, onClose }) => {
   const handleCancelDelete = () => {
     setShowConfirm(false);
   };
+
   const handleSave = async (event) => {
     event.preventDefault();
     const formData = new FormData();
@@ -68,6 +70,10 @@ const EmployeeProfile = ({ employee, onClose }) => {
     formData.append("name", name);
     formData.append("email", email);
     formData.append("phone", phone);
+    formData.append("title", title);
+    formData.append("level", level);
+
+    
 
     if (password !== "") {
       formData.append("password", password);
@@ -76,9 +82,9 @@ const EmployeeProfile = ({ employee, onClose }) => {
     if (file != null) {
       formData.append("image", file);
     }
-    console.log(formData.email);
-
+  
     try {
+      console.log(employee.level_translation)
       const response = await updateEmployee(formData, employee.id);
       setShowModal(false);
       window.location.reload();
@@ -119,8 +125,8 @@ const EmployeeProfile = ({ employee, onClose }) => {
                 {employee.name}
               </h2>
               <div className="flex justify-center text-shade">
-                <div className="">FrontEnd developer/</div>
-                <div className=" ">Senior</div>
+                <div className="">{employee.title}/</div>
+                <div className=" ">{employee.level}</div>
               </div>
             </div>
             <div className="space-y-2 overflow-y-auto max-h-[60vh]">
@@ -194,6 +200,16 @@ const EmployeeProfile = ({ employee, onClose }) => {
             onChange={(e) => setPhone(e.target.value)}
             onBlur={() => handelInputBlur("phone")}
           />
+          <FormModel
+            label="Jop title:"
+            id="title"
+            type="text"
+            placeholder="Enter employee jop title "
+            defaultValue={employee.title}
+            onBlur={() => handelInputBlur("title")}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <MenuLevels onClientSelect={setLevel} clientId={level} />
 
           <FormModel
             label="Password:"
@@ -239,7 +255,7 @@ const EmployeeProfile = ({ employee, onClose }) => {
           </div>
         </Model>
       )}
-      {showConfirm &&  (
+      {showConfirm && (
         <Success
           text={"Are you sure you want to delete this employee?"}
           onClose={handleCancelDelete}
@@ -254,7 +270,6 @@ const EmployeeProfile = ({ employee, onClose }) => {
           />
         </Success>
       )}
-
     </div>
   );
 };

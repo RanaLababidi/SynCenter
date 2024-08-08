@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import TaskAssignees from "./TaskAssignees";
 import StartEndDate from "./StartEndDate";
 import TaskDetails from "../Pages/TasksDetails";
-
+import { changeStatus } from "../http";
 const getItemBgColor = (columnId) => {
   switch (columnId) {
     case "TODO":
@@ -62,8 +60,20 @@ export default function DragDrop({ initialColumns }) {
   };
 
   // Handle drop event
-  const onDrop = (event, columnId) => {
+  const onDrop = async (event, columnId) => {
     event.preventDefault();
+    var status;
+    if (columnId == "TO_CHECK") {
+      status = 2;
+    } else if (columnId == "TODO") {
+      status = 0;
+    } else if (columnId == "DOING") {
+      status = 1;
+    } else if (columnId == "DONE") {
+      status = 3;
+    }
+    const formData = new FormData();
+    formData.append("status", status);
     const itemId = event.dataTransfer.getData("itemId");
     const sourceColumnId = Object.keys(columns).find((colId) =>
       columns[colId].some((item) => item.id === parseInt(itemId))
@@ -85,6 +95,13 @@ export default function DragDrop({ initialColumns }) {
       [sourceColumnId]: updatedSourceItems,
       [columnId]: updatedDestItems,
     });
+    try {
+      console.log(status);
+      const response = await changeStatus(formData, itemId);
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error adding project:", error);
+    }
   };
 
   // Handle drag over to allow dropping
@@ -107,7 +124,7 @@ export default function DragDrop({ initialColumns }) {
 
           <div className="w-full mt-4 ">
             {tasksArray.map((item) => (
-              <button onClick={() => handleButtonClick(item)}>
+              <button onClick={() => handleButtonClick(item)} key={item.id}>
                 <div
                   key={item.id}
                   draggable
@@ -132,12 +149,6 @@ export default function DragDrop({ initialColumns }) {
                       />
                     ))}
 
-                    {showDetails && selectedEmployee && (
-                      <TaskAssignees
-                        employees={selectedEmployee}
-                        onClose={handleCloseModal}
-                      />
-                    )}
                     {showDetails && selectedTask && (
                       <TaskDetails
                         Task={setSelectedTask}

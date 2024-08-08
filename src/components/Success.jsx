@@ -12,7 +12,7 @@ const Success = ({ text, title, onClose, children, gif,Icon }) => {
           aria-hidden="true"
         ></span>
 
-        <div className=" sm:p-6 sm:pb-4 inline-block align-bottom bg-green-200 rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div className=" sm:p-6 sm:pb-4 inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
           <img src={gif} className="w-1/3 mx-auto" alt="Forgot Password" />
           <h1 className="font-title text-center mb-2 text-xl font-bold leading-9 tracking-tight text-background">
             {text}

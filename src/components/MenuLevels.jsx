@@ -1,41 +1,22 @@
 import { useState, useEffect } from "react";
-import { Label, Listbox, ListboxButton, ListboxOption, ListboxOptions, Transition } from "@headlessui/react";
+import { Listbox, ListboxButton, ListboxOption, ListboxOptions, Transition } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/20/solid";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Menu({ onClientSelect, clientName, clientId }) {
+// Define the levels with their respective IDs
+const levels = [
+  { id: 0, name: 'JUNIOR' },
+  { id: 1, name: 'MID_LEVEL' },
+  { id: 2, name: 'SENIOR' }
+];
+
+export default function MenuLevels({ onClientSelect, clientName, clientId }) {
   const [selected, setSelected] = useState(null);
-  const [clients, setClients] = useState([]);
-  const placeholder = "Select client";
-
-  const handleButtonClick = async () => {
-    try {
-      const data = await loader();
-      setClients(data);
-    } catch (error) {
-      console.error("Error fetching clients:", error);
-    }
-  };
-
-  const loader = async () => {
-    const token = localStorage.getItem("token");
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    };
-
-    const response = await fetch("http://192.168.1.2:8000/company/clients", { headers });
-
-    if (!response.ok) {
-      throw new Error("Could not fetch clients.");
-    }
-
-    const responseData = await response.json();
-    return responseData.clients;
-  };
+  const [clients, setClients] = useState(levels); // Initialize clients with levels
+  const placeholder = "Select Level: ";
 
   useEffect(() => {
     onClientSelect(selected ? selected.id : clientId);
@@ -49,16 +30,12 @@ export default function Menu({ onClientSelect, clientName, clientId }) {
     <Listbox value={selected} onChange={setSelected}>
       {({ open }) => (
         <>
-          <Label className="block text-background mt-3 font-title font-bold">Client:</Label>
+          <label className="block text-background mt-3 font-title font-bold">Level:</label>
           <div className="relative mt-2">
             <ListboxButton
               className="relative cursor-default bg-white pl-3 pr-10 text-left text-gray-900 ring-1 ring-inset ring-gray-300 focus:outline-none form-input mt-1 block w-full border border-background rounded-lg py-1.5 shadow-sm focus:ring-2 focus:ring-inset focus:ring-pistach sm:text-sm sm:leading-6"
-              onClick={handleButtonClick}
             >
               <span className="flex items-center">
-                {selected && selected.avatar && (
-                  <img src={selected.avatar} alt="" className="h-5 w-5 flex-shrink-0 rounded-full" />
-                )}
                 <span className="ml-3 block truncate">
                   {selected ? selected.name : clientName || placeholder}
                 </span>
@@ -86,7 +63,6 @@ export default function Menu({ onClientSelect, clientName, clientId }) {
                     {({ selected, active }) => (
                       <>
                         <div className="flex items-center">
-                          <img src={client.image} alt="" className="h-5 w-5 flex-shrink-0 rounded-full" />
                           <span className={classNames(selected ? "font-semibold" : "font-normal", "ml-3 block truncate")}>
                             {client.name}
                           </span>
