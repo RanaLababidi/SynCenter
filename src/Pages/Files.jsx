@@ -96,9 +96,9 @@ export default function Files() {
                   {getFileName(files.url)}
                 </td>
                 <td className="flex justify-center items-center px-4 py-2">
-                  <Avatar src={files.image} />
+                  <Avatar src={files.creator_image} />
                   <div className="pl-2 ">
-                    <p className="">Rana imad </p>
+                    <p className="">{files.creator_name} </p>
                   </div>
                 </td>
                 <td className=" text-center px-4 py-2">

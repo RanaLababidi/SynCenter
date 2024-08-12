@@ -37,7 +37,7 @@ export default function CheckCode() {
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
           <Form className="space-y-6" method="POST">
             <input type="hidden" name="otp" value={otp} />
-            <OtpInput length={6} onOtpChange={handleOtpChange} />
+            <OtpInput length={5} onOtpChange={handleOtpChange} />
             <ButtonComponent label="Verify" />
 
           </Form>
@@ -46,39 +46,4 @@ export default function CheckCode() {
     </div>
   );
 }
-export async function Action({ request, params }) {
-  const email = localStorage.getItem("email");
 
-  const data = await request.formData();
-  const eventData = {
-    email: email,
-    code: data.get("otp"), // Retrieve the full OTP code
-  };
-
-  const response = await fetch(
-    "https://mibo-backend.r-link.io/admin/check-code",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(eventData),
-    }
-  );
-
-  if (
-    response.status === 422 ||
-    response.status === 401 ||
-    response.status === 400
-  ) {
-    const errorData = await response.json();
-    return json(errorData, { status: response.status });
-  }
-
-  if (!response.ok) {
-    return json({ message: "Could not send." }, { status: 500 });
-  }
-  localStorage.setItem("code", data.get("otp"));
-
-  return redirect("/auth/forgetPassword/resetPassword");
-}

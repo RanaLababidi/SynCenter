@@ -124,7 +124,7 @@ export default function DragDrop({ initialColumns }) {
 
           <div className="w-full mt-4 ">
             {tasksArray.map((item) => (
-              <button onClick={() => handleButtonClick(item)} key={item.id}>
+              <Link to={`${item.id}`} key={item.id}>
                 <div
                   key={item.id}
                   draggable
@@ -160,7 +160,7 @@ export default function DragDrop({ initialColumns }) {
                   {/* date */}
                   <StartEndDate start={item.start_date} end={item.end_date} />
                 </div>
-              </button>
+                </Link>
             ))}
           </div>
         </div>

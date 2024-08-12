@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useRouteLoaderData } from "react-router-dom";
 import Title from "../components/Title";
 import TaskInfo from "../components/TaskInfo";
 import TaskAssignees from "../components/TaskAssignees";
-import ComputerIcon from "@mui/icons-material/Computer";
+import TimeSheet from "../components/TimeSheet"
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -14,8 +14,9 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 export default function TaskDetails() {
-  const location = useLocation();
-  const { task } = location.state;
+  const task = useRouteLoaderData("taskDetails");
+  console.log(task);
+
   const [showDetails, setShowDetails] = useState(false);
   const handleOpenModal = (employee) => {
     setShowDetails(true);
@@ -98,11 +99,14 @@ export default function TaskDetails() {
           </div>
         </div>
       </div>
-      <div className="flex mt-5">
+      <div className="flex mt-5 mb-3">
         <TaskInfo Icon={AssignmentOutlinedIcon} title="Description :" />
         {task.description}
       </div>
-      <div className="border  border-white rounded-3xl w-3/4 h-screen mt-5"></div>
+  
+      <TimeSheet timesheets={task.timesheets}/>
+
+  
     </div>
   );
 }

@@ -6,7 +6,7 @@ import Tooltip from "@mui/material/Tooltip";
 
 const Model = ({ title, onClose, onSave, children, labelButton }) => {
   return (
-    <div className="fixed inset-0">
+    <div className="fixed inset-0 backdrop-blur-xl">
       <div className="flex items-center justify-center px-4 pt-4 pb-20 text-center overflow-auto">
         <span
           className="hidden sm:inline-block sm:align-middle sm:h-screen"

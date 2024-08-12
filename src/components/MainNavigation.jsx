@@ -18,6 +18,7 @@ import AutoGraphOutlinedIcon from "@mui/icons-material/AutoGraphOutlined";
 import EngineeringOutlinedIcon from "@mui/icons-material/EngineeringOutlined";
 import WorkOutlineSharpIcon from "@mui/icons-material/WorkOutlineSharp";
 import SwitchAccountOutlinedIcon from "@mui/icons-material/SwitchAccountOutlined";
+import AssignmentIndSharpIcon from '@mui/icons-material/AssignmentIndSharp';
 import LogoutSharpIcon from "@mui/icons-material/LogoutSharp";
 import logo from "../assets/Synclogo1.png";
 const drawerWidth = 200;
@@ -140,7 +141,7 @@ export default function MainNavigation() {
         <List className="bg-background h-screen">
           {token && (
             <nav className="pl-6 h-full ">
-              <ul className="flex flex-col h-full space-y-20">
+              <ul className="flex flex-col h-full space-y-14">
                 <li className="">
                   <NavLink
                     to="statistics"
@@ -169,7 +170,13 @@ export default function MainNavigation() {
                     open={open}
                   />
                 </li>
-
+                <li className="">
+                  <NavLink
+                    to="profile"
+                    Icon={AssignmentIndSharpIcon}
+                    open={open}
+                  />
+                </li>
                 <li>
                   <Logout Icon={LogoutSharpIcon} open={open} />
                 </li>

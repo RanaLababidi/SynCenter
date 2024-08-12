@@ -47,32 +47,3 @@ export default function ForgetPassword() {
   );
 }
 
-export async function Action({ request, params }) {
-  const data = await request.formData();
-  const eventData = { email: data.get("email") };
-
-  const response = await fetch(
-    "https://mibo-backend.r-link.io/admin/reset-password",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(eventData),
-    }
-  );
-
-  if (
-    response.status === 422 ||
-    response.status === 401 ||
-    response.status === 400
-  ) {
-    const errorData = await response.json();
-    return json(errorData, { status: response.status });
-  }
-
-  if (!response.ok) {
-    return json({ message: "Could not send email." }, { status: 500 });
-  }
-  localStorage.setItem("email", data.get("email"));
-
-  return redirect("checkCode");
-}

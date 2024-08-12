@@ -60,43 +60,4 @@ export default function ResetPassword() {
     </div>
   );
 }
-export async function Action({ request, params }) {
-  const email = localStorage.getItem("email");
-  const code = localStorage.getItem("code");
 
-  const data = await request.formData();
-  const eventData = {
-    email: email,
-    code: code,
-    new_password: data.get("new_password"),
-    new_password_confirmation: data.get("confirmed"),
-  };
-
-  const response = await fetch(
-    "https://mibo-backend.r-link.io/admin/edit-password",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(eventData),
-    }
-  );
-
-  if (
-    response.status === 422 ||
-    response.status === 401 ||
-    response.status === 400
-  ) {
-    const errorData = await response.json();
-    return json(errorData, { status: response.status });
-  }
-
-  if (!response.ok) {
-    return json({ message: "Could not send." }, { status: 500 });
-  }
-  localStorage.removeItem("email");
-  localStorage.removeItem("code");
-
-  return redirect("/auth/forgetPassword/successRestPasword");
-}
