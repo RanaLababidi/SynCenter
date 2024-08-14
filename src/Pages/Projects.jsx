@@ -148,7 +148,7 @@ function Projects() {
             placeholder="Enter project description"
             onChange={(e) => setDescription(e.target.value)}
           />
-          <Menu onClientSelect={setSelectedClientId} />
+       
           <label className="font-title font-bold block text-background mt-3">
             Image:
           </label>
@@ -166,7 +166,9 @@ function Projects() {
                 className="hidden"
               />
             </label>
+            
           </div>
+          <Menu onClientSelect={setSelectedClientId} />  
         </Model>
       )}
     </div>

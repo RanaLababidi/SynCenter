@@ -72,7 +72,7 @@ const Clients = () => {
     if (file != null) {
       formData.append("image", file);
     }
-   
+
     try {
       const response = await storeClient(formData);
       setShowModal(false);
@@ -131,12 +131,10 @@ const Clients = () => {
   return (
     <div>
       <div className=" text-white font-content">
-        <div className=" flex justify-between items-center">
-          <Title title="Clients" />
-          <div className="inline">
-            <ButtonComponent label="Add new Client" onClick={handleOpen} />
-          </div>
+        <div className=" w-56 ml-auto mb-5 ">
+          <ButtonComponent label="Add new Client" onClick={handleOpen} />
         </div>
+
         <div className="overflow-hidden rounded-3xl border border-shade">
           <table className="min-w-full border">
             <thead>
@@ -179,7 +177,6 @@ const Clients = () => {
                     >
                       <ModeEditOutlineSharpIcon />
                     </button>
-               
                   </td>
                 </tr>
               ))}
@@ -230,7 +227,9 @@ const Clients = () => {
           />
           <div>
             {passwordMatch && (
-              <p className="text-redcolor">The password field confirmation does not match </p>
+              <p className="text-redcolor">
+                The password field confirmation does not match{" "}
+              </p>
             )}
           </div>
 
@@ -313,7 +312,9 @@ const Clients = () => {
           />
           <div>
             {passwordMatch && (
-              <p className="text-redcolor">The password field confirmation does not match </p>
+              <p className="text-redcolor">
+                The password field confirmation does not match{" "}
+              </p>
             )}
           </div>
 

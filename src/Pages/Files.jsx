@@ -10,11 +10,10 @@ import Avatar from "../components/Avatar";
 import Success from "../components/Success";
 import CardButton from "../components/CardButton";
 import fileIcon from "../assets/file.png";
-
 import DeleteSharpIcon from "@mui/icons-material/DeleteSharp";
 import FileDownloadSharpIcon from "@mui/icons-material/FileDownloadSharp";
 import CloseSharpIcon from "@mui/icons-material/CloseSharp";
-import { deleteFiles, deleteEmployee } from "../http";
+import { deleteFiles } from "../http";
 
 export default function Files() {
   const [showModal, setShowModal] = useState(false);

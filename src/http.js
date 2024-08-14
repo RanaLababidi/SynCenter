@@ -7,7 +7,7 @@ import {
   redirect,
   Link,
 } from "react-router-dom";
-const baseUrl = "http://192.168.1.3:8000";
+const baseUrl = "http://192.168.1.5:8000";
 const token = localStorage.getItem("token");
 const headers = {
   "Content-Type": "application/json",
@@ -537,6 +537,27 @@ export async function updateCompany(formData) {
   const token = localStorage.getItem("token");
 
   const response = await fetch(`${baseUrl}/company/profile`, {
+    method: "POST", // Changed method to POST
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.log("Server error response:", errorData);
+    throw new Error(`Could not update project: ${errorData.message}`);
+  }
+
+  const responseData = await response.json();
+  return responseData;
+}
+//Meeting
+export async function AddMeeting(formData) {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${baseUrl}/company/meetings`, {
     method: "POST", // Changed method to POST
     headers: {
       Authorization: `Bearer ${token}`,

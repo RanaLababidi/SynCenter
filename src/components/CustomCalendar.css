@@ -1,0 +1,20 @@
+.highlight-date {
+  background-color: #41e0d1 !important;
+  color: black;
+  border-radius: 50% !important;
+}
+
+.selected-date {
+  background-color: #030712 !important;
+  color: white;
+  border-radius: 50% !important;
+}
+.weekend-date {
+
+  color: black;
+  border-radius: 50% !important;
+}
+
+.all{
+  border-radius: 50% ;
+}

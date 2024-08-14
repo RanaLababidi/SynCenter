@@ -3,11 +3,11 @@ import {
   createBrowserRouter,
   RouterProvider,
   useLoaderData,
-  redirect 
+  redirect,
 } from "react-router-dom";
 //pages
 import Home from "./Pages/Home.jsx";
-import Login  from "./Pages/Auth/Login.jsx";
+import Login from "./Pages/Auth/Login.jsx";
 import Logout from "./Pages/Auth/Logout.jsx";
 import ForgetPassword from "./Pages/Auth/ForgetPassword.jsx";
 import CheckCode from "./Pages/Auth/CheckCode.jsx";
@@ -16,6 +16,7 @@ import SuccessResetPassword from "./Pages/Auth/SuccessResetPassword.jsx";
 import Projects from "./Pages/Projects.jsx";
 import EmployeeProfile from "./Pages/EmployeeProfile.jsx";
 import Clients from "./Pages/Clients.jsx";
+import ClientNav from "./components/ClientNav.jsx";
 import Employees from "./Pages/Employees.jsx";
 import Statistics from "./Pages/Statistics.jsx";
 import TasksDetails from "./Pages/TasksDetails.jsx";
@@ -26,6 +27,9 @@ import { checkAuthLoader } from "./util/auth.js";
 import Files from "./Pages/Files.jsx";
 import Tasks from "./Pages/Tasks.jsx";
 import Profile from "./Pages/Profile.jsx";
+import Meeting from "./Pages/Meetings.jsx";
+import MeetingNav from "./components/MeetingNav.jsx";
+import ReceivedMeetings from "./Pages/ReceivedMeetings.jsx"
 import {
   loginAction,
   forgotPasswordAction,
@@ -40,7 +44,6 @@ import {
   tasksDetailsLoader,
   fileLoade,
   profileLoader,
-  
 } from "./http.js";
 /*
 function to declare the routers:createBrowserRouter
@@ -152,9 +155,20 @@ const router = createBrowserRouter([
       },
       {
         path: "clients",
-        element: <Clients />,
+        element: <ClientNav />,
         id: "clients",
         loader: clientsIndex,
+        children: [
+          { path: "", element: <Clients /> },
+          { path: "meeting", id: "meeting", element: <MeetingNav />, 
+            children:[
+              {path:"", element:<Meeting/>},
+              {path:"receivedMeetings",id:"ReceivedMeetings" ,element:<ReceivedMeetings/>},
+             
+            ]
+            
+          },
+        ],
       },
       {
         path: "profile",
