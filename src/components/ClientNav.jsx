@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
-import EditNoteSharpIcon from "@mui/icons-material/EditNoteSharp";
+import GroupsSharpIcon from '@mui/icons-material/GroupsSharp';
 import ChecklistIcon from "@mui/icons-material/Checklist";
+import SwitchAccountOutlinedIcon from "@mui/icons-material/SwitchAccountOutlined";
 
 export default function FooterTabs() {
   const [activeTab, setActiveTab] = useState("info");
@@ -23,7 +24,7 @@ export default function FooterTabs() {
               }`}
               onClick={() => handleTabClick("tasks")}
             >
-              <ChecklistIcon className="mr-2" />
+              <GroupsSharpIcon className="mr-2" />
               Meetings
             </button>
           </Link>
@@ -36,7 +37,7 @@ export default function FooterTabs() {
               }`}
               onClick={() => handleTabClick("info")}
             >
-              <EditNoteSharpIcon className="mr-2" />
+              <SwitchAccountOutlinedIcon className="mr-2" />
               Clients Profiles
             </button>
           </Link>

@@ -1,12 +1,26 @@
 import React, { useState } from "react";
-import DateRangeSharpIcon from "@mui/icons-material/DateRangeSharp";
+import {
+  Form,
+  Link,
+  useParams,
+  useRouteLoaderData,
+  useNavigate,
+  redirect,
+} from "react-router-dom";
 import ButtonComponent from "../components/ButtonComponent";
 import FormModelRequired from "../components/FormModelRequired";
 import Menu from "../components/Menu";
 import { AddMeeting } from "../http";
-import Model from "./Model";
+import CalendarComponent from "../components/CalendarComponent";
+import Model from "../Pages/Model";
+import meet from "../assets/meet.png";
 
 export default function ReceivedMeetings() {
+  const data = useRouteLoaderData("meeting");
+  const companyEvents = data.filter(
+    (event) => event.requester_type === "User"
+  );
+
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState(""); // YYYY-MM-DD
@@ -48,8 +62,22 @@ export default function ReceivedMeetings() {
   return (
     <div className="">
       <div className="flex justify-between items-center">
-        <div className="ml-auto">
-          <ButtonComponent label="Schedule new meeting" onClick={handleOpen} />
+        <div className="ml-auto "></div>
+      </div>
+      <div className="mt-9  h-fit">
+        <div className="flex">
+          <CalendarComponent events={companyEvents} />
+          <div className="ml-auto ">
+            <button
+              className="flex w-full justify-center text-center rounded-s-full bg-pistach px-12 py-4 font-content leading-6 text-background transition duration-500 ease-in-out transform hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              onClick={handleOpen} // Corrected here
+            >
+              <div>
+                Schedule new meeting
+                <img src={meet} className="ml-16" />
+              </div>
+            </button>
+          </div>
         </div>
       </div>
       {showModal && (

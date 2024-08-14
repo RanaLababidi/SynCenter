@@ -29,7 +29,7 @@ import Tasks from "./Pages/Tasks.jsx";
 import Profile from "./Pages/Profile.jsx";
 import Meeting from "./Pages/Meetings.jsx";
 import MeetingNav from "./components/MeetingNav.jsx";
-import ReceivedMeetings from "./Pages/ReceivedMeetings.jsx"
+import ReceivedMeetings from "./Pages/ReceivedMeetings.jsx";
 import {
   loginAction,
   forgotPasswordAction,
@@ -44,6 +44,8 @@ import {
   tasksDetailsLoader,
   fileLoade,
   profileLoader,
+  MeetingLoader,
+  statisticsLoader,
 } from "./http.js";
 /*
 function to declare the routers:createBrowserRouter
@@ -101,7 +103,8 @@ const router = createBrowserRouter([
     id: "root",
     loader: checkAuthLoader,
     children: [
-      { path: "statistics", element: <Statistics /> },
+      { path: "statistics",id:"statistics", element: <Statistics />,loader:statisticsLoader
+       },
       {
         path: "projects",
         id: "projects",
@@ -160,13 +163,19 @@ const router = createBrowserRouter([
         loader: clientsIndex,
         children: [
           { path: "", element: <Clients /> },
-          { path: "meeting", id: "meeting", element: <MeetingNav />, 
-            children:[
-              {path:"", element:<Meeting/>},
-              {path:"receivedMeetings",id:"ReceivedMeetings" ,element:<ReceivedMeetings/>},
-             
-            ]
-            
+          {
+            path: "meeting",
+            id: "meeting",
+            element: <MeetingNav />,
+            loader: MeetingLoader,
+            children: [
+              { path: "", element: <Meeting /> },
+              {
+                path: "receivedMeetings",
+                id: "ReceivedMeetings",
+                element: <ReceivedMeetings />,
+              },
+            ],
           },
         ],
       },

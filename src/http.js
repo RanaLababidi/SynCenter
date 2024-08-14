@@ -7,7 +7,7 @@ import {
   redirect,
   Link,
 } from "react-router-dom";
-const baseUrl = "http://192.168.1.5:8000";
+const baseUrl = "http://192.168.1.3:8000";
 const token = localStorage.getItem("token");
 const headers = {
   "Content-Type": "application/json",
@@ -58,14 +58,11 @@ export async function loginAction({ request, params }) {
 export async function forgotPasswordAction({ request, params }) {
   const data = await request.formData();
   const eventData = { email: data.get("email") };
-  const response = await fetch(
-    `${baseUrl}/company/reset-password`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(eventData),
-    }
-  );
+  const response = await fetch(`${baseUrl}/company/reset-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(eventData),
+  });
   if (
     response.status === 422 ||
     response.status === 401 ||
@@ -90,16 +87,13 @@ export async function checkCodeAction({ request, params }) {
     code: data.get("otp"), // Retrieve the full OTP code
   };
 
-  const response = await fetch(
-    `${baseUrl}/company/check-code`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(eventData),
-    }
-  );
+  const response = await fetch(`${baseUrl}/company/check-code`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(eventData),
+  });
 
   if (
     response.status === 422 ||
@@ -129,16 +123,13 @@ export async function resetPasswordAction({ request, params }) {
     new_password_confirmation: data.get("confirmed"),
   };
 
-  const response = await fetch(
-    `${baseUrl}/company/edit-password`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(eventData),
-    }
-  );
+  const response = await fetch(`${baseUrl}/company/edit-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(eventData),
+  });
 
   if (
     response.status === 422 ||
@@ -573,4 +564,55 @@ export async function AddMeeting(formData) {
 
   const responseData = await response.json();
   return responseData;
+}
+export async function MeetingLoader() {
+  const response = await fetch(`${baseUrl}/company/meetings`, {
+    headers: headers,
+  });
+
+  if (!response.ok) {
+    throw new Error("Could not fetch projects.");
+  }
+
+  const responseData = await response.json();
+  return responseData.data; // Return parsed JSON data
+}
+export async function deleteMeeting(id) {
+  const response = await fetch(`${baseUrl}/company/meetings/${id}`, {
+    method: "DELETE",
+    headers: headers,
+  });
+
+  if (!response.ok) {
+    throw new Error("Could not delete project.");
+  }
+
+  const responseData = await response.json();
+  return responseData;
+}
+export async function acceptMeeting(id,state) {
+  const response = await fetch(`${baseUrl}/company/meetings/${id}/accept-toggle/${state}`, {
+    method: "GET",
+    headers: headers,
+  });
+
+  if (!response.ok) {
+    throw new Error("Could not delete project.");
+  }
+
+  const responseData = await response.json();
+  return responseData;
+}
+//statistics
+export async function statisticsLoader() {
+  const response = await fetch(`${baseUrl}/company/statistics`, {
+    headers: headers,
+  });
+
+  if (!response.ok) {
+    throw new Error("Could not fetch projects.");
+  }
+
+  const responseData = await response.json();
+  return responseData.data; // Return parsed JSON data
 }

@@ -1,51 +1,10 @@
 import React, { useState } from "react";
 import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css"; // Keep this for default styles
-import "./CustomCalendar.css"; // Import custom styles
-
-const events = [
-  {
-    id: 1,
-    start_date: "2024-12-01 10:30:00",
-    title: "test",
-    status: 0,
-    status_name: "PENDING",
-    client: {
-      /* ... */
-    },
-    requester_type: "Company",
-    created_at: "2024-08-13T10:45:39.000000Z",
-    updated_at: "2024-08-13T10:45:39.000000Z",
-  },
-  {
-    id: 2,
-    start_date: "2024-08-13 00:00:00",
-    title: "first meeting",
-    status: 0,
-    status_name: "PENDING",
-    client: {
-      /* ... */
-    },
-    requester_type: "Company",
-    created_at: "2024-08-13T19:02:35.000000Z",
-    updated_at: "2024-08-13T19:02:35.000000Z",
-  },
-  {
-    id: 3,
-    start_date: "2024-08-14 23:11:00",
-    title: "First meeting",
-    status: 1,
-    status_name: "ACCEPTED",
-    client: {
-      /* ... */
-    },
-    requester_type: "Company",
-    created_at: "2024-08-13T20:11:58.000000Z",
-    updated_at: "2024-08-13T20:16:57.000000Z",
-  },
-];
-
-const CalendarWithEvents = () => {
+import "react-calendar/dist/Calendar.css";
+import "./CustomCalendar.css";
+import MeetingDetails from "./MeetingDetails";
+import meeting from "../assets/meeting.png";
+export default function CalendarComponent({ events }) {
   const [date, setDate] = useState(new Date());
   const [selectedDateEvents, setSelectedDateEvents] = useState([]);
 
@@ -57,9 +16,10 @@ const CalendarWithEvents = () => {
 
   const tileClassName = ({ date: tileDate, view }) => {
     if (view === "month") {
-      const isWeekend = tileDate.getDay() === 0 || tileDate.getDay() === 6;
+      const isWeekend = tileDate.getDay() === 6 || tileDate.getDay() === 5;
       const isHighlighted = highlightDates.some(
-        (highlightDate) => tileDate.toDateString() === highlightDate.toDateString()
+        (highlightDate) =>
+          tileDate.toDateString() === highlightDate.toDateString()
       );
       const isSelected = tileDate.toDateString() === date.toDateString();
       let classes = "all ";
@@ -85,32 +45,30 @@ const CalendarWithEvents = () => {
   };
 
   return (
-    <div className="p-4  flex">
+    <div className="p-4   flex">
       <Calendar
         onChange={handleDateClick}
         value={date}
         tileClassName={tileClassName}
-        className=""
+      
         calendarType="islamic"
+        className="w-96"
       />
-      <div className="mt-4 ml-3 text-white">
-        <h2>Events for {date.toDateString()}</h2>
+      <div className=" text-white ml-5">
+        <div className="flex mb-3">
+          <img src={meeting} className="-mt-2 mr-2 " />
+          <p className=" text-3xl font-title">Mettings at: {date.toDateString()}</p>
+        </div>
         {selectedDateEvents.length > 0 ? (
           <div>
             {selectedDateEvents.map((event) => (
-              <li key={event.id} className="border p-2 mb-2 rounded-lg">
-                <strong>{event.title}</strong>
-                <p>Status: {event.status_name}</p>
-                <p>Requester Type: {event.id}</p>
-              </li>
+             <div key={event.id}><MeetingDetails meeting={event}/></div>
             ))}
           </div>
         ) : (
-          <p>No events for this date.</p>
+          <p className="font-content">No events for this date.</p>
         )}
       </div>
     </div>
   );
-};
-
-export default CalendarWithEvents;
+}
