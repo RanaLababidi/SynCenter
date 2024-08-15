@@ -18,9 +18,10 @@ import AutoGraphOutlinedIcon from "@mui/icons-material/AutoGraphOutlined";
 import EngineeringOutlinedIcon from "@mui/icons-material/EngineeringOutlined";
 import WorkOutlineSharpIcon from "@mui/icons-material/WorkOutlineSharp";
 import SwitchAccountOutlinedIcon from "@mui/icons-material/SwitchAccountOutlined";
-import AssignmentIndSharpIcon from '@mui/icons-material/AssignmentIndSharp';
+import AssignmentIndSharpIcon from "@mui/icons-material/AssignmentIndSharp";
 import LogoutSharpIcon from "@mui/icons-material/LogoutSharp";
 import logo from "../assets/Synclogo1.png";
+import NotificationComponent from "../Pages/Notification";
 const drawerWidth = 200;
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -106,11 +107,10 @@ export default function MainNavigation() {
 
   return (
     <div className="bg-background flex h-full min-h-screen">
-
       <CssBaseline />
 
       <AppBar position="fixed" open={open}>
-        <Toolbar className="bg-gray">
+        <Toolbar className="bg-background">
           <IconButton
             aria-label="open drawer"
             onClick={handleDrawerOpen}
@@ -120,9 +120,14 @@ export default function MainNavigation() {
               ...(open && { display: "none" }),
             }}
           >
-            <ChevronRightIcon className="w-10 h-10 text-lightgray transition duration-500 ease-in-out transform hover:scale-150  hover:text-white" />
+            <ChevronRightIcon
+              fontSize="large"
+              className="w-10 h-10 ml-1 text-white transition duration-500 ease-in-out transform hover:scale-150  hover:text-white"
+            />
           </IconButton>
-          <div variant="h6">search bar here</div>
+          <div className="ml-auto">
+            <NotificationComponent />
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>

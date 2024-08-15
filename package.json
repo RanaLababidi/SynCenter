@@ -21,6 +21,7 @@
     "@react-pdf-viewer/core": "^3.12.0",
     "@react-pdf-viewer/default-layout": "^3.12.0",
     "date-fns": "^3.6.0",
+    "firebase": "^10.12.5",
     "pdfjs-dist": "^4.5.136",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
