@@ -76,13 +76,19 @@ import { requestNotificationPermission } from "./notification-permission";
 import { getMessaging, onMessage } from "firebase/messaging";
 
 const router = createBrowserRouter([
-  { path: "",id:"home", element: <Home />,loader:planLoader },
+  { path: "", id: "home", element: <Home />, loader: planLoader },
+  {
+    path: ":planId",
+    element: <Register />,
+    id: "Register",
+    action: RegisterAction,
+  },
   {
     path: "/auth",
     //errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <Login />, id: "login", action: loginAction },
-      { path: ":planId", element: <Register />, id: "Register", action: RegisterAction },
+      { index: " ", element: <Login />, id: "login", action: loginAction },
+
       {
         path: "forgetPassword",
         children: [

@@ -143,7 +143,7 @@ export async function RegisterAction({ request, params }) {
   const subscriptionData = {
     plan_id: planId,
   };
-  
+
   const subscribeResponse = await fetch(`${baseUrl}/company/subscribe`, {
     method: "POST",
     headers: {
@@ -160,8 +160,19 @@ export async function RegisterAction({ request, params }) {
     );
   }
 
-  
+  const subscribeResponseData = await subscribeResponse.json();
+
+  // Check if the response indicates success and contains a URL
+  if (subscribeResponseData.success && subscribeResponseData.url) {
+    return redirect(subscribeResponseData.url);
+  }
+
+  return json(
+    { message: "Subscription was successful, but no URL was provided." },
+    { status: 500 }
+  );
 }
+
 
 export async function subscribe(planId) {
   const eventData = {
@@ -757,7 +768,7 @@ export async function notificationLoader() {
   }
 
   const responseData = await response.json();
-  return responseData.notifications; // Return parsed JSON data
+  return responseData.data; // Return parsed JSON data
 }
 export async function unread() {
   const response = await fetch(`${baseUrl}/company/notification/unread-count`, {
@@ -769,7 +780,7 @@ export async function unread() {
   }
 
   const responseData = await response.json();
-  return responseData.unread_count; // Return the unread count
+  return responseData.data; 
 }
 export async function planLoader() {
   const response = await fetch(`${baseUrl}/company/plans`, {});

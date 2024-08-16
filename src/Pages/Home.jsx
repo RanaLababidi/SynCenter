@@ -61,7 +61,7 @@ export default function Home() {
           </div>
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 rounded-full">
             {data.map((plan) => (
-               <Link to={`auth/${plan.id}`} key={plan.id}>
+               <Link to={`${plan.id}`} key={plan.id}>
               <div
                 key={plan.id}
                 className="w-80 h-40 ml-8 rounded-full shadow-2xl backdrop-blur-xl p-5 text-white border border-white focus:ring-2 focus:ring-inset focus:ring-pistach sm:text-sm sm:leading-6 hover:border-pistach"
