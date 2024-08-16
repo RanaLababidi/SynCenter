@@ -14,9 +14,33 @@ const headers = {
   Authorization: `Bearer ${token}`,
 };
 import { getMessaging, getToken } from "firebase/messaging";
-import {messaging} from "./firebase-config"
+import { messaging } from "./firebase-config";
 
 //Auth
+async function requestPermission() {
+  console.log("Requesting permission...");
+  const permission = await Notification.requestPermission();
+  if (permission === "granted") {
+    console.log("Notification permission granted.");
+  } else {
+    console.log("Notification permission denied.");
+  }
+}
+
+async function retrieveFCMToken() {
+  try {
+    await requestPermission();
+    const fcmToken = await getToken(messaging, {
+      vapidKey:
+        "BF_CG_rX9kA_yhoDK_ON9uzbBmgA7Q3hnx9XEE8165eWAAHjYdy3opviPJsJ-88xbu22HE8LcYUxweZsUaNCkPU",
+    });
+    console.log("FCM Token:", fcmToken);
+    return fcmToken;
+  } catch (error) {
+    console.error("Error retrieving FCM token:", error);
+  }
+}
+
 export async function loginAction({ request, params }) {
   const data = await request.formData();
   const eventData = {
@@ -43,21 +67,19 @@ export async function loginAction({ request, params }) {
 
   // Handle non-OK responses
   if (!response.ok) {
-    // Return a JSON response with an error message
     return json(
       { message: "Could not login to your account." },
       { status: 500 }
     );
   }
+
   const responseData = await response.json();
   const token = responseData.access_token;
-
   localStorage.setItem("token", token);
 
   try {
-    await retrieveFCMToken().then(fcmToken => {
-      // Send token to your server or save it locally
-      console.log("FCM function: ", fcmToken);
+    const fcmToken = await retrieveFCMToken();
+    if (fcmToken) {
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -66,77 +88,98 @@ export async function loginAction({ request, params }) {
       console.log("Headers:", headers);
       console.log("Body:", body);
 
-      return fetch(`${baseUrl}/company/device-token`, {
+      await fetch(`${baseUrl}/company/device-token`, {
         method: "POST",
         headers: headers,
         body: body,
       });
-    }).catch(error => {
-      console.error("Error sending FCM token:", error);
-    });
+    }
   } catch (error) {
     console.error("Error sending FCM token:", error);
   }
 
   return redirect("/home/statistics");
 }
-export async function fcm() {
-  const messaging = getMessaging();
-  const fcmToken = retrieveFCMToken();
-  console.log("FCM function:  ", fcmToken);
-
-  const token = localStorage.getItem("token");
-  const headers = {
-    "Content-Type": "application/json", // Ensure the Content-Type header is set
-    Authorization: `Bearer ${token}`,
+export async function RegisterAction({ request, params }) {
+  const planId = params.planId;
+  const data = await request.formData();
+  const eventData = {
+    email: data.get("email"),
+    password: data.get("password"),
+    phone: data.get("phone"),
+    name: data.get("name"),
+    password_confirmation: data.get("password_confirmation"),
   };
-  const body = JSON.stringify({ device_token: fcmToken });
 
-  // Log headers and body to ensure they are correct
-  console.log("Headers:", headers);
-  console.log("Body:", body);
-
-  const response = await fetch(`${baseUrl}/company/device-token`, {
+  const response = await fetch(`${baseUrl}/company/register`, {
     method: "POST",
-    headers: headers,
-    body: body,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(eventData),
   });
 
+  if (
+    response.status === 422 ||
+    response.status === 401 ||
+    response.status === 400
+  ) {
+    const errorData = await response.json();
+    return json({ message: errorData.errors || "Registration failed." }, { status: response.status });
+  }
+
   if (!response.ok) {
-    // Log response status and text if the request fails
-    console.error(
-      "Failed to send device token:",
-      response.status,
-      response.statusText
+    return json(
+      { message: "Could not register your account." },
+      { status: 500 }
     );
-    throw new Error("Could not send device token.");
   }
 
   const responseData = await response.json();
-  return responseData;
+  const token = responseData.access_token;
+  localStorage.setItem("token", token);
+
+  // Subscribe the user to the selected plan
+  const subscriptionData = {
+    plan_id: planId,
+  };
+  
+  const subscribeResponse = await fetch(`${baseUrl}/company/subscribe`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`, // Include the token for authorization
+    },
+    body: JSON.stringify(subscriptionData),
+  });
+
+  if (!subscribeResponse.ok) {
+    return json(
+      { message: "Could not subscribe to the plan." },
+      { status: 500 }
+    );
+  }
+
+  
 }
 
-async function requestPermission() {
-  console.log("Requesting permission...");
-  const permission = await Notification.requestPermission();
-  if (permission === "granted") {
-    console.log("Notification permission granted.");
-  } else {
-    console.log("Notification permission denied.");
-  }
-}
+export async function subscribe(planId) {
+  const eventData = {
+    plan_id: planId
+  };
+  const response = await fetch(`${baseUrl}/company/subscribe`, {
+    method: "GET",
+    headers: headers,
+    body: JSON.stringify(eventData),
 
-async function retrieveFCMToken() {
-  try {
-    await requestPermission();
-    const fcmToken = await getToken(messaging, {
-      vapidKey: "BF_CG_rX9kA_yhoDK_ON9uzbBmgA7Q3hnx9XEE8165eWAAHjYdy3opviPJsJ-88xbu22HE8LcYUxweZsUaNCkPU",
-    });
-    console.log("FCM Token:", fcmToken);
-    return fcmToken;
-  } catch (error) {
-    console.error("Error retrieving FCM token:", error);
+  });
+
+  if (!response.ok) {
+    throw new Error("Could not fetch project details.");
   }
+
+  const responseData = await response.json();
+  return responseData.projects; // Return parsed JSON data
 }
 
 export async function forgotPasswordAction({ request, params }) {
@@ -715,4 +758,26 @@ export async function notificationLoader() {
 
   const responseData = await response.json();
   return responseData.notifications; // Return parsed JSON data
+}
+export async function unread() {
+  const response = await fetch(`${baseUrl}/company/notification/unread-count`, {
+    headers: headers,
+  });
+
+  if (!response.ok) {
+    throw new Error("Could not fetch projects.");
+  }
+
+  const responseData = await response.json();
+  return responseData.unread_count; // Return the unread count
+}
+export async function planLoader() {
+  const response = await fetch(`${baseUrl}/company/plans`, {});
+
+  if (!response.ok) {
+    throw new Error("Could not fetch projects.");
+  }
+
+  const responseData = await response.json();
+  return responseData.plans; // Return parsed JSON data
 }

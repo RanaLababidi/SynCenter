@@ -8,9 +8,9 @@ const firebaseConfig = {
   projectId: "sync-center-mobile",
   storageBucket: "sync-center-mobile.appspot.com",
   messagingSenderId: "706747477585",
-  appId: "1:706747477585:web:24ff6a62b64b68ab229270"
-};
-
+  appId: "1:706747477585:web:24ff6a62b64b68ab229270",
+  measurementId: "G-TEZZKE79ZJ"
+};  
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 

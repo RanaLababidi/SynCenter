@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+
 import {
   createBrowserRouter,
   RouterProvider,
@@ -8,6 +9,8 @@ import {
 //pages
 import Home from "./Pages/Home.jsx";
 import Login from "./Pages/Auth/Login.jsx";
+import Register from "./Pages/Auth/Register.jsx";
+
 import Logout from "./Pages/Auth/Logout.jsx";
 import ForgetPassword from "./Pages/Auth/ForgetPassword.jsx";
 import CheckCode from "./Pages/Auth/CheckCode.jsx";
@@ -31,6 +34,8 @@ import Meeting from "./Pages/Meetings.jsx";
 import MeetingNav from "./components/MeetingNav.jsx";
 import ReceivedMeetings from "./Pages/ReceivedMeetings.jsx";
 import {
+  unread,
+  RegisterAction,
   loginAction,
   forgotPasswordAction,
   checkCodeAction,
@@ -46,6 +51,7 @@ import {
   profileLoader,
   MeetingLoader,
   statisticsLoader,
+  planLoader,
 } from "./http.js";
 /*
 function to declare the routers:createBrowserRouter
@@ -65,14 +71,18 @@ losding text in the ui:useNavighation
 {navigation.state==loading<p>loading....33</p>}
 
 */
+import { requestNotificationPermission } from "./notification-permission";
+
+import { getMessaging, onMessage } from "firebase/messaging";
 
 const router = createBrowserRouter([
-  { path: "", element: <ProjectNav /> },
+  { path: "",id:"home", element: <Home />,loader:planLoader },
   {
     path: "/auth",
     //errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <Login />, action: loginAction },
+      { index: true, element: <Login />, id: "login", action: loginAction },
+      { path: ":planId", element: <Register />, id: "Register", action: RegisterAction },
       {
         path: "forgetPassword",
         children: [
@@ -103,8 +113,13 @@ const router = createBrowserRouter([
     id: "root",
     loader: checkAuthLoader,
     children: [
-      { path: "statistics",id:"statistics", element: <Statistics />,loader:statisticsLoader
-       },
+      {
+        path: "statistics",
+        id: "statistics",
+        element: <Statistics />,
+        loader: statisticsLoader,
+        children: [{ path: "", id: "notification", loader: unread }],
+      },
       {
         path: "projects",
         id: "projects",
@@ -194,7 +209,10 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  
+  useEffect(() => {
+    requestNotificationPermission();
+  }, []);
+
   return <RouterProvider router={router} />;
 }
 export default App;
