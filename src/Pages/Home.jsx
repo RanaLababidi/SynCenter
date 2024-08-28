@@ -81,6 +81,12 @@ export default function Home() {
               </Link>
             ))}
           </div>
+          
+         <div className="text-center j mt-5 font-title font-bold text-white text-3xl hover:text-pistach" >
+         <Link to={'/auth'} >
+            Already Have Account?
+          </Link>
+         </div>
         </div>
       </div>
     </div>

@@ -7,7 +7,7 @@ import {
   redirect,
   Link,
 } from "react-router-dom";
-const baseUrl = "http://192.168.1.3:8000";
+const baseUrl = "http://192.168.166.36:8000";
 const token = localStorage.getItem("token");
 const headers = {
   "Content-Type": "application/json",
@@ -27,7 +27,7 @@ async function requestPermission() {
   }
 }
 
-async function retrieveFCMToken() {
+async function retrievFeFCMToken() {
   try {
     await requestPermission();
     const fcmToken = await getToken(messaging, {
@@ -125,7 +125,10 @@ export async function RegisterAction({ request, params }) {
     response.status === 400
   ) {
     const errorData = await response.json();
-    return json({ message: errorData.errors || "Registration failed." }, { status: response.status });
+    return json(
+      { message: errorData.errors || "Registration failed." },
+      { status: response.status }
+    );
   }
 
   if (!response.ok) {
@@ -148,7 +151,7 @@ export async function RegisterAction({ request, params }) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`, // Include the token for authorization
+      Authorization: `Bearer ${token}`, // Include the token for authorization
     },
     body: JSON.stringify(subscriptionData),
   });
@@ -173,24 +176,35 @@ export async function RegisterAction({ request, params }) {
   );
 }
 
-
-export async function subscribe(planId) {
-  const eventData = {
-    plan_id: planId
+export async function subscribe(id) {
+  console.log(id);
+  const subscriptionData = {
+    plan_id: id,
   };
-  const response = await fetch(`${baseUrl}/company/subscribe`, {
-    method: "GET",
-    headers: headers,
-    body: JSON.stringify(eventData),
-
+  const subscribeResponse = await fetch(`${baseUrl}/company/subscribe`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`, // Include the token for authorization
+    },
+    body: JSON.stringify(subscriptionData),
   });
 
-  if (!response.ok) {
-    throw new Error("Could not fetch project details.");
+  if (response.status === 400) {
+    return response;
   }
 
-  const responseData = await response.json();
-  return responseData.projects; // Return parsed JSON data
+  const subscribeResponseData = await subscribeResponse.json();
+
+  // Check if the response indicates success and contains a URL
+  if (subscribeResponseData.success && subscribeResponseData.url) {
+    return redirect(subscribeResponseData.url);
+  }
+
+  return json(
+    { message: "Subscription was successful, but no URL was provided." },
+    { status: 500 }
+  );
 }
 
 export async function forgotPasswordAction({ request, params }) {
@@ -780,7 +794,7 @@ export async function unread() {
   }
 
   const responseData = await response.json();
-  return responseData.data; 
+  return responseData.data;
 }
 export async function planLoader() {
   const response = await fetch(`${baseUrl}/company/plans`, {});

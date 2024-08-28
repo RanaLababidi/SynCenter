@@ -128,6 +128,18 @@ export default function MeetingDetails({ meeting }) {
         title="Email :"
         content={meeting.client.email}
       />
+      <TaskInfo
+        Icon={ForwardToInboxSharpIcon}
+        title="Email :"
+        content={meeting.requester_type
+        }
+      />
+      <TaskInfo
+        Icon={ForwardToInboxSharpIcon}
+        title="Email :"
+        content={meeting.id}
+      />
+      
       {isMeetingDatePassed ? (
         <p>The meeting date has passed. <SentimentVeryDissatisfiedIcon/></p>
       ) : (

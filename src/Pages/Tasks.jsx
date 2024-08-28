@@ -40,6 +40,8 @@ export default function Tasks() {
     try {
       const response = await storeTask(formData);
       setShowModal(false);
+      window.location.reload();
+
     } catch (error) {
       console.error("Error adding project:", error);
     }

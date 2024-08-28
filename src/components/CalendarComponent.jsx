@@ -58,6 +58,7 @@ export default function CalendarComponent({ events }) {
         <div className="flex mb-3">
           <img src={meeting} className="-mt-2 mr-2 " />
           <p className=" text-3xl font-title">Mettings at: {date.toDateString()}</p>
+          
         </div>
         {selectedDateEvents.length > 0 ? (
           <div>

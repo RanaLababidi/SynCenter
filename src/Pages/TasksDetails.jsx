@@ -3,7 +3,7 @@ import { useLocation, Link, useRouteLoaderData } from "react-router-dom";
 import Title from "../components/Title";
 import TaskInfo from "../components/TaskInfo";
 import TaskAssignees from "../components/TaskAssignees";
-import TimeSheet from "../components/TimeSheet"
+import TimeSheet from "../components/TimeSheet";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -75,7 +75,6 @@ export default function TaskDetails() {
         <div className="flex">
           <TaskInfo Icon={SupervisedUserCircleIcon} title="Assignees :" />
           <div className="flex items-center">
-            <p className="mr-4">Assignees:</p>
             {task.employees.map((employee) => (
               <img
                 key={employee.id}
@@ -103,10 +102,8 @@ export default function TaskDetails() {
         <TaskInfo Icon={AssignmentOutlinedIcon} title="Description :" />
         {task.description}
       </div>
-  
-      <TimeSheet timesheets={task.timesheets}/>
 
-  
+      <TimeSheet timesheets={task.timesheets} />
     </div>
   );
 }

@@ -5,12 +5,14 @@ export default function NotificationItemComponent({ notifications }) {
   if (!notifications || notifications.length === 0) {
     return <div>Loading</div>;
   }
-
   return (
     <div className="overflow-y-auto max-h-96">
       {notifications.map((notification) => {
         let linkTo = "/home/clients/meeting";
         if (notification.title === "Task Status Updated!") {
+          linkTo = "/home/projects";
+        }
+        else if (notification.title === "New File Uploaded") {
           linkTo = "/home/projects";
         }
 

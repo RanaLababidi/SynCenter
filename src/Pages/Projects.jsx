@@ -88,7 +88,7 @@ function Projects() {
                 <div className="  ">
                   <h5 className="text-xl font-bold mb-2 mt">{project.name}</h5>
                   <div className="flex items-center ">
-                    <Avatar src={project.client.logo} />
+                    <Avatar src={project.client.image} />
                     <div className="pl-2">
                       <p className="text-xl">{project.client.name}</p>
                       <div className="text-shade text-xs">

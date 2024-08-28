@@ -1,19 +1,23 @@
 import React, { useState, useCallback } from "react";
-import { useRouteLoaderData } from "react-router-dom";
+import { useRouteLoaderData, Link } from "react-router-dom";
 import ModeEditOutlineSharpIcon from "@mui/icons-material/ModeEditOutlineSharp";
 import RoofingSharpIcon from "@mui/icons-material/RoofingSharp";
 import AlternateEmailSharpIcon from "@mui/icons-material/AlternateEmailSharp";
 import LocalPhoneSharpIcon from "@mui/icons-material/LocalPhoneSharp";
 import EventNoteSharpIcon from "@mui/icons-material/EventNoteSharp";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
-
-import { updateCompany } from "../http";
+import Sub from "../Pages/Sub";
+import { updateCompany , planLoader} from "../http";
 import Model from "../Pages/Model";
 import FormModel from "../components/FormModel";
 import FormModelRequired from "../components/FormModelRequired";
+import { Subscript } from "@mui/icons-material";
 export default function Profile() {
   const data = useRouteLoaderData("profile");
   const [showModal, setShowModal] = useState(false);
+  const [showPlan, setShowPlan] = useState(false);
+  const [Plans, setPlans] = useState(false);
+
   const [file, setFile] = useState();
   const [name, setName] = useState(data.name);
   const [password_confirmation, setPassword_confirmation] = useState("");
@@ -46,7 +50,20 @@ export default function Profile() {
   const handleClose = () => {
     setShowModal(false);
   };
-
+  const close = () => {
+    setShowPlan(false);
+  };
+  const handleOnclick = async () => {
+    try {
+      const response = await planLoader();
+      setPlans(response);
+      setShowPlan(true);
+    } catch (error) {
+      console.error("Error updating profile:", error.message);
+      // Display a user-friendly error message
+      alert(`Failed to update profile: ${error.message}`);
+    }
+  };
   const handleSave = async (event) => {
     event.preventDefault();
     const formData = new FormData();
@@ -72,7 +89,6 @@ export default function Profile() {
     try {
       console.log(data.level_translation);
       const response = await updateCompany(formData);
-      setShowModal(false);
       window.location.reload();
     } catch (error) {
       console.error("Error updating profile:", error.message);
@@ -80,10 +96,21 @@ export default function Profile() {
       alert(`Failed to update profile: ${error.message}`);
     }
   };
+  const plan = (planID) => {
+    var palnName = "";
+    if (planID === 1) {
+      palnName = "Basic";
+    } else if (planID === 2) {
+      palnName = "Pro";
+    } else if (planID === 3) {
+      palnName = "Pro";
+    }
+    return palnName;
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center pt-20  bg-gray-800 bg-opacity-75">
-      <div className="overflow-visible relative w-1/2 h-3/4  bg-gray font-content  text-white  rounded-xl text-left  shadow-xl transform transition-all   ">
+      <div className="overflow-visible relative w-1/2 h-fit  bg-gray font-content  text-white  rounded-xl text-left  shadow-xl transform transition-all   ">
         <div className="absolute -top-16 ml-7  transform  z-10">
           <h1 className="text-9xl font-bold text-white ">Profile</h1>
         </div>
@@ -110,12 +137,27 @@ export default function Profile() {
                 </div>
                 <div className="ml-2">{data.phone}</div>
               </div>
+
               <div>
                 <div className="text-shade font-semibold tracking-widest">
                   <EventNoteSharpIcon />
-                  Subscribe at:
+                  Subscribion:
                 </div>
-                <div className="ml-2">{formatDate(data.subscribe_at)}</div>
+                <div className="ml-2 mr-7">
+                  {plan(data.subscription.plan_id)}
+                </div>
+                <div className="flex">
+                  <div className="ml-2">Start at:</div>
+                  <div className="ml-2 mr-7">
+                    {formatDate(data.subscription.start_date)}
+                  </div>
+                </div>
+                <div className="flex">
+                  <div className="ml-2">End at:</div>
+                  <div className="ml-4">
+                    {formatDate(data.subscription.end_date)}
+                  </div>
+                </div>
               </div>
             </div>
             <div className="pl-60">
@@ -124,6 +166,14 @@ export default function Profile() {
                 src={data.logo}
                 alt={`${data.name} profile`}
               />
+              <div className="mt-32 -ml-52  border-amber-50">
+                <button
+                  onClick={handleOnclick}
+                  className="text-pistach underline hover:text-white "
+                >
+                  what a new Subscribion?
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -192,7 +242,7 @@ export default function Profile() {
           <div>
             {passwordMatch && (
               <p className="text-redcolor">
-                The password field confirmation does not match{" "}
+                The password field confirmation does not match
               </p>
             )}
           </div>
@@ -217,6 +267,7 @@ export default function Profile() {
           </div>
         </Model>
       )}
+      {showPlan && <Sub close={close} id={data.id}   plans={Plans}></Sub>}
     </div>
   );
 }
